@@ -41,7 +41,7 @@ def _as_sql_exists(self, compiler, connection, template=None, **extra_context):
     # CASE WHEN expression. Change the template since the When expression
     # requires a left hand side (column) to compare against.
     sql, params = self.as_sql(compiler, connection, template, **extra_context)
-    sql = 'CASE WHEN {} THEN 1 ELSE 0 END'.format(sql)
+    sql = 'CASE WHEN EXISTS({}) THEN 1 ELSE 0 END'.format(sql)
     return sql, params
 
 def _as_sql_order_by(self, compiler, connection):

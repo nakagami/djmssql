@@ -32,3 +32,4 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     can_introspect_autofield = False
     supports_tablespaces = False
     supports_index_on_text_field = True
+    can_introspect_duration_field = False
