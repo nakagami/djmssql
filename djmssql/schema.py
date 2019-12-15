@@ -8,10 +8,9 @@ from django.db.backends.ddl_references import (
     Statement,
 )
 from django.db.models import Index
-from django.db.models.fields import AutoField, BigAutoField
+from django.db.models.fields import SmallAutoField, AutoField, BigAutoField
 from django.db.models.fields.related import ManyToManyField
 from django.db.transaction import TransactionManagementError
-from django.utils.encoding import force_text
 from .cursor import _quote_value
 
 
@@ -245,7 +244,7 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
                 definition,
             ))
             # Autoincrement SQL (for backends with post table definition variant)
-            if field.get_internal_type() in ("AutoField", "BigAutoField"):
+            if field.get_internal_type() in ("SmallAutoField", "AutoField", "BigAutoField"):
                 autoinc_sql = self.connection.ops.autoinc_sql(model._meta.db_table, field.column)
                 if autoinc_sql:
                     self.deferred_sql.extend(autoinc_sql)
