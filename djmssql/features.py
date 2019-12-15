@@ -5,7 +5,7 @@ from django.db.utils import InterfaceError
 class DatabaseFeatures(BaseDatabaseFeatures):
     allow_sliced_subqueries = False
     can_introspect_small_integer_field = True
-    can_return_id_from_insert = True
+    can_return_id_from_insert = False
     can_use_chunked_reads = False
     for_update_after_from = True
     greatest_least_ignores_nulls = True
