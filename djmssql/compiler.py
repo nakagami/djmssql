@@ -80,9 +80,9 @@ class SQLCompiler(compiler.SQLCompiler):
             self.query.order_by = ['pk']
         return super().as_sql(with_limits, with_col_aliases)
 
-    def compile(self, node, select_format=False):
+    def compile(self, node):
         node = self._as_microsoft(node)
-        return super().compile(node, select_format)
+        return super().compile(node)
 
     def _as_microsoft(self, node):
         as_microsoft = None
@@ -141,11 +141,12 @@ class SQLInsertCompiler(compiler.SQLInsertCompiler, SQLCompiler):
         # queries and generate their own placeholders. Doing that isn't
         # necessary and it should be possible to use placeholders and
         # expressions in bulk inserts too.
-        can_bulk = (not self.return_id and self.connection.features.has_bulk_insert) and has_fields
+        can_bulk = (not self.returning_fields and self.connection.features.has_bulk_insert)
+
 
         placeholder_rows, param_rows = self.assemble_as_sql(fields, value_rows)
 
-        if self.return_id and self.connection.features.can_return_id_from_insert:
+        if self.returning_fields and self.connection.features.can_return_id_from_insert:
             result.insert(0, 'SET NOCOUNT ON')
             result.append((values_format + ';') % ', '.join(placeholder_rows[0]))
             params = [param_rows[0]]

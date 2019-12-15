@@ -26,6 +26,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
     display_name = 'SQL Server'
 
     data_types = {
+        'SmallAutoField':    'smallint IDENTITY (1, 1)',
         'AutoField':         'int IDENTITY (1, 1)',
         'BigAutoField':      'bigint IDENTITY (1, 1)',
         'BigIntegerField':   'bigint',
