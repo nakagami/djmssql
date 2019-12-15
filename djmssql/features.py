@@ -8,7 +8,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     can_return_id_from_insert = False
     can_use_chunked_reads = False
     for_update_after_from = True
-    greatest_least_ignores_nulls = True
     has_real_datatype = True
     has_zoneinfo_database = False
     ignores_table_name_case = True
@@ -33,3 +32,5 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_tablespaces = False
     supports_index_on_text_field = True
     can_introspect_duration_field = False
+    nulls_order_largest = True
+    supports_boolean_expr_in_select_clause = False

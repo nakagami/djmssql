@@ -100,8 +100,8 @@ class SQLCompiler(compiler.SQLCompiler):
             as_microsoft = _as_sql_length
         elif isinstance(node, Exists):
             as_microsoft = _as_sql_exists
-        elif isinstance(node, OrderBy):
-            as_microsoft = _as_sql_order_by
+#        elif isinstance(node, OrderBy):
+#            as_microsoft = _as_sql_order_by
         elif isinstance(node, StdDev):
             as_microsoft = _as_sql_stddev
         elif isinstance(node, StrIndex):
