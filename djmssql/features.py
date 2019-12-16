@@ -32,5 +32,5 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_tablespaces = False
     supports_index_on_text_field = True
     can_introspect_duration_field = False
-    nulls_order_largest = True
+    nulls_order_largest = False
     supports_boolean_expr_in_select_clause = False

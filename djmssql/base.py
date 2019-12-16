@@ -120,13 +120,14 @@ class DatabaseWrapper(BaseDatabaseWrapper):
             conn_params['host'] = settings_dict['HOST']
         if settings_dict['PORT']:
             conn_params['port'] = settings_dict['PORT']
+        conn_params['isolation_level'] = Database.ISOLATION_LEVEL_READ_COMMITTED
         return conn_params
 
     def get_new_connection(self, conn_params):
         connection = Database.connect(**conn_params)
-        with connection.cursor() as cur:
-            cur.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
-        connection.commit()
+#        with connection.cursor() as cur:
+#            cur.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
+#        connection.commit()
         return connection
 
     def init_connection_state(self):
