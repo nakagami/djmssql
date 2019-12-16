@@ -85,6 +85,11 @@ class DatabaseOperations(BaseDatabaseOperations):
             return '%s / (2 * %s)' % tuple(sub_expressions)
         return super().combine_expression(connector, sub_expressions)
 
+    def convert_booleanfield_value(self, value, expression, connection):
+        if value in (0, 1):
+            value = bool(value)
+        return value
+
     def convert_datetimefield_value(self, value, expression, connection):
         if value is not None:
             if settings.USE_TZ:
@@ -188,7 +193,9 @@ class DatabaseOperations(BaseDatabaseOperations):
     def get_db_converters(self, expression):
         converters = super().get_db_converters(expression)
         internal_type = expression.output_field.get_internal_type()
-        if internal_type == 'DateTimeField':
+        if internal_type in ['BooleanField', 'NullBooleanField']:
+            converters.append(self.convert_booleanfield_value)
+        elif internal_type == 'DateTimeField':
             converters.append(self.convert_datetimefield_value)
         elif internal_type == 'FloatField':
             converters.append(self.convert_floatfield_value)
