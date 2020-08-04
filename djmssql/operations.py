@@ -313,39 +313,14 @@ class DatabaseOperations(BaseDatabaseOperations):
         """
         return "ROLLBACK TRANSACTION %s" % sid
 
-    def sql_flush(self, style, tables, sequences, allow_cascade=False):
-        """
-        Returns a list of SQL statements required to remove all data from
-        the given database tables (without actually removing the tables
-        themselves).
-
-        The returned value also includes SQL statements required to reset DB
-        sequences passed in :param sequences:.
-
-        The `style` argument is a Style object as returned by either
-        color_style() or no_style() in django.core.management.color.
-
-        The `allow_cascade` argument determines whether truncation may cascade
-        to tables with foreign keys pointing the tables being truncated.
-        """
+    def sql_flush(self, style, tables, *, reset_sequences=False, allow_cascade=False):
         if tables:
             # Cannot use TRUNCATE on tables that are referenced by a FOREIGN KEY
             # So must use the much slower DELETE
             from django.db import connections
             cursor = connections[self.connection.alias].cursor()
-            # Try to minimize the risks of the braindeaded inconsistency in
-            # DBCC CHEKIDENT(table, RESEED, n) behavior.
-            seqs = []
-            for seq in sequences:
-                cursor.execute("SELECT COUNT(*) FROM %s" % self.quote_name(seq["table"]))
-                rowcnt = cursor.fetchone()[0]
-                elem = {}
-                if rowcnt:
-                    elem['start_id'] = 0
-                else:
-                    elem['start_id'] = 1
-                elem.update(seq)
-                seqs.append(elem)
+
+
             cursor.execute("SELECT TABLE_NAME, CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE not in ('PRIMARY KEY','UNIQUE')")
             fks = cursor.fetchall()
             sql_list = ['ALTER TABLE %s NOCHECK CONSTRAINT %s;' % \
@@ -353,15 +328,31 @@ class DatabaseOperations(BaseDatabaseOperations):
             sql_list.extend(['%s %s %s;' % (style.SQL_KEYWORD('DELETE'), style.SQL_KEYWORD('FROM'),
                              style.SQL_FIELD(self.quote_name(table)) ) for table in tables])
 
-            sql_list.extend(['%s %s (%s, %s, %s) %s %s;' % (
-                style.SQL_KEYWORD('DBCC'),
-                style.SQL_KEYWORD('CHECKIDENT'),
-                style.SQL_FIELD(self.quote_name(seq["table"])),
-                style.SQL_KEYWORD('RESEED'),
-                style.SQL_FIELD('%d' % seq['start_id']),
-                style.SQL_KEYWORD('WITH'),
-                style.SQL_KEYWORD('NO_INFOMSGS'),
-                ) for seq in seqs])
+
+            if reset_sequences:
+                # Try to minimize the risks of the braindeaded inconsistency in
+                # DBCC CHEKIDENT(table, RESEED, n) behavior.
+                sequences = []  # TODO: aggregate sequences from tables
+                seqs = []
+                for seq in sequences:
+                    cursor.execute("SELECT COUNT(*) FROM %s" % self.quote_name(seq["table"]))
+                    rowcnt = cursor.fetchone()[0]
+                    elem = {}
+                    if rowcnt:
+                        elem['start_id'] = 0
+                    else:
+                        elem['start_id'] = 1
+                    elem.update(seq)
+                    seqs.append(elem)
+                sql_list.extend(['%s %s (%s, %s, %s) %s %s;' % (
+                    style.SQL_KEYWORD('DBCC'),
+                    style.SQL_KEYWORD('CHECKIDENT'),
+                    style.SQL_FIELD(self.quote_name(seq["table"])),
+                    style.SQL_KEYWORD('RESEED'),
+                    style.SQL_FIELD('%d' % seq['start_id']),
+                    style.SQL_KEYWORD('WITH'),
+                    style.SQL_KEYWORD('NO_INFOMSGS'),
+                    ) for seq in seqs])
 
             sql_list.extend(['ALTER TABLE %s CHECK CONSTRAINT %s;' % \
                     (self.quote_name(fk[0]), self.quote_name(fk[1])) for fk in fks])
