@@ -56,11 +56,9 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         Returns a list of table and view names in the current database.
         """
         sql = 'SELECT TABLE_NAME, TABLE_TYPE FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = SCHEMA_NAME()'
-        cursor.connection.begin()
         cursor.execute(sql)
         types = {'BASE TABLE': 't', 'VIEW': 'v'}
         r = [TableInfo(row[0], types.get(row[1])) for row in cursor.fetchall()]
-        cursor.connection.rollback()
         return r
 
     def get_table_description(self, cursor, table_name, identity_check=True):
