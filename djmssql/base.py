@@ -41,6 +41,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         'FilePathField':     'nvarchar(%(max_length)s)',
         'FloatField':        'double precision',
         'IntegerField':      'int',
+        'JSONFIeld':         'varbinary(max)',
         'IPAddressField':    'nvarchar(15)',
         'GenericIPAddressField': 'nvarchar(39)',
         'NullBooleanField':  'bit',
