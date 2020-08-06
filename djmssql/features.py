@@ -31,7 +31,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_index_on_text_field = True
     nulls_order_largest = False
     supports_order_by_nulls_modifier = False
-    supports_boolean_expr_in_select_clause = False
     supports_primitives_in_json_field = False
     supports_json_field_contains = False
 
