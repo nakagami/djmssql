@@ -101,11 +101,6 @@ class DatabaseOperations(BaseDatabaseOperations):
             value = float(value)
         return value
 
-    def convert_booleanfield_value(self, value, expression, connection):
-        if value is not None:
-            value = bool(value)
-        return value
-
     def date_extract_sql(self, lookup_type, field_name):
         if lookup_type == 'week_day':
             return "DATEPART(dw, %s)" % field_name
@@ -193,9 +188,7 @@ class DatabaseOperations(BaseDatabaseOperations):
     def get_db_converters(self, expression):
         converters = super().get_db_converters(expression)
         internal_type = expression.output_field.get_internal_type()
-        if internal_type in ['BooleanField', 'NullBooleanField']:
-            converters.append(self.convert_booleanfield_value)
-        elif internal_type == 'DateTimeField':
+        if internal_type == 'DateTimeField':
             converters.append(self.convert_datetimefield_value)
         elif internal_type == 'FloatField':
             converters.append(self.convert_floatfield_value)
