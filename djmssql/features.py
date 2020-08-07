@@ -10,6 +10,10 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     for_update_after_from = True
     has_real_datatype = True
     has_zoneinfo_database = False
+    can_introspect_autofield = False
+    can_introspect_binary_field = False
+    introspected_boolean_field_type = 'IntegerField'
+    can_introspect_duration_field = False
     ignores_table_name_case = True
     ignores_quoted_identifier_case = True
     requires_literal_defaults = True
@@ -29,6 +33,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_table_check_constraints = False
     supports_tablespaces = False
     supports_index_on_text_field = True
+    supports_partial_indexes = False
     nulls_order_largest = False
     supports_order_by_nulls_modifier = False
     supports_primitives_in_json_field = False
