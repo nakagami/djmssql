@@ -7,7 +7,7 @@ class DatabaseClient(BaseDatabaseClient):
     executable_name = 'sqlcmd'
 
     @classmethod
-    def settings_to_cmd_args(cls, settings_dict):
+    def settings_to_cmd_args(cls, settings_dict, parameters):
 
         args = [executable_name]
 
