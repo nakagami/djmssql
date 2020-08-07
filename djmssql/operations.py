@@ -1,4 +1,5 @@
 import datetime
+import uuid
 import warnings
 
 from django.conf import settings
@@ -13,6 +14,13 @@ class DatabaseOperations(BaseDatabaseOperations):
     compiler_module = 'djmssql.compiler'
 
     cast_char_field_without_max_length = 'nvarchar(max)'
+
+    cast_data_types = {
+        'AutoField': 'int',
+        'BigAutoField': 'bigint',
+        'SmallAutoField': 'smallint',
+        'TextField': cast_char_field_without_max_length,
+    }
 
     def _convert_field_to_tz(self, field_name, tzname):
         if settings.USE_TZ and not tzname == 'UTC':
