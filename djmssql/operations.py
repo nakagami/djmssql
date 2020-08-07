@@ -85,20 +85,20 @@ class DatabaseOperations(BaseDatabaseOperations):
             return '%s / (2 * %s)' % tuple(sub_expressions)
         return super().combine_expression(connector, sub_expressions)
 
-    def convert_booleanfield_value(self, value, expression, connection):
-        if value in (0, 1):
-            value = bool(value)
-        return value
-
     def convert_datetimefield_value(self, value, expression, connection):
         if value is not None:
             if settings.USE_TZ:
                 value = timezone.make_aware(value, self.connection.timezone)
         return value
 
-    def convert_floatfield_value(self, value, expression, connection):
+    def convert_booleanfield_value(self, value, expression, connection):
+        if value in (0, 1):
+            value = bool(value)
+        return value
+
+    def convert_uuidfield_value(self, value, expression, connection):
         if value is not None:
-            value = float(value)
+            value = uuid.UUID(value)
         return value
 
     def date_extract_sql(self, lookup_type, field_name):
@@ -190,11 +190,10 @@ class DatabaseOperations(BaseDatabaseOperations):
         internal_type = expression.output_field.get_internal_type()
         if internal_type == 'DateTimeField':
             converters.append(self.convert_datetimefield_value)
-        elif internal_type == 'FloatField':
-            converters.append(self.convert_floatfield_value)
+        elif internal_type == 'UUIDField':
+            converters.append(self.convert_uuidfield_value)
         elif internal_type in ('NullBooleanField', 'BooleanField'):
             converters.append(self.convert_booleanfield_value)
-
         return converters
 
     def last_insert_id(self, cursor, table_name, pk_name):

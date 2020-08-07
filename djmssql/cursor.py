@@ -1,5 +1,7 @@
 import datetime
 import binascii
+import uuid
+import enum
 import collections
 from django.utils import timezone
 from django.db.utils import InterfaceError
@@ -11,8 +13,13 @@ except ImportError as e:
 
 
 def _quote_value(v):
+    if isinstance(v, enum.Enum):
+        v = v.value
+
     if isinstance(v, datetime.datetime) and timezone.is_aware(v):
         return "'" + str(v.astimezone(timezone.utc).replace(tzinfo=None)) + "'"
+    elif isinstance(v, uuid.UUID):
+        return "'%s'" % v.hex
     return Database.quote_value(v)
 
 def convert_sql(query, params):
