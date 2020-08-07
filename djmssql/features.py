@@ -39,6 +39,8 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_primitives_in_json_field = False
     supports_json_field_contains = False
     has_bulk_insert = False
+    can_create_inline_fk = False
+    allows_auto_pk_0 = False
 
     @cached_property
     def introspected_field_types(self):
