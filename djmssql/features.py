@@ -38,6 +38,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_order_by_nulls_modifier = False
     supports_primitives_in_json_field = False
     supports_json_field_contains = False
+    has_bulk_insert = False
 
     @cached_property
     def introspected_field_types(self):
