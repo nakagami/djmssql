@@ -36,8 +36,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     nulls_order_largest = False
     order_by_nulls_first = True
     supports_order_by_nulls_modifier = False
-    supports_primitives_in_json_field = False
-    supports_json_field_contains = False
+    supports_json_field = False
     has_bulk_insert = False
     can_create_inline_fk = False
     allows_auto_pk_0 = False
