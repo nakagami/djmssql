@@ -28,12 +28,11 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_timezones = False
     supports_transactions = True
     uses_savepoints = True
-    has_native_uuid_field = True
+    has_native_uuid_field = False
     has_select_for_update = False
     supports_table_check_constraints = False
     supports_tablespaces = False
     supports_index_on_text_field = True
-    supports_partial_indexes = False
     nulls_order_largest = False
     order_by_nulls_first = True
     supports_order_by_nulls_modifier = False
