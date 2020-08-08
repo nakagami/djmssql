@@ -6,6 +6,9 @@ from django.conf import settings
 from django.db.backends.base.operations import BaseDatabaseOperations
 from django.utils import timezone
 from django.utils.encoding import force_str
+from django.db.models import Exists, ExpressionWrapper
+from django.db.models.expressions import RawSQL
+from django.db.models.sql.where import WhereNode
 
 import pytz
 
@@ -452,3 +455,13 @@ class DatabaseOperations(BaseDatabaseOperations):
         elif isinstance(expression, Mod):
             expression.arg_joiner = '%'
             expression.template = '(%(expressions)s)'
+
+    def conditional_expression_supported_in_where_clause(self, expression):
+        # reference to Oracle adapter
+        if isinstance(expression, (Exists, WhereNode)):
+            return True
+        if isinstance(expression, ExpressionWrapper) and expression.conditional:
+            return self.conditional_expression_supported_in_where_clause(expression.expression)
+        if isinstance(expression, RawSQL) and expression.conditional:
+            return True
+        return False
