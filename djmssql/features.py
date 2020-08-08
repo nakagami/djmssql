@@ -39,6 +39,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     can_create_inline_fk = False
     allows_auto_pk_0 = False
     supports_select_union = False
+    closed_cursor_error_class = InterfaceError
 
     @cached_property
     def introspected_field_types(self):
