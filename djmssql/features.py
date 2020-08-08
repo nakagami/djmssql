@@ -38,6 +38,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     has_bulk_insert = False
     can_create_inline_fk = False
     allows_auto_pk_0 = False
+    supports_select_union = False
 
     @cached_property
     def introspected_field_types(self):
