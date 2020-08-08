@@ -1,5 +1,4 @@
 import datetime
-import uuid
 import warnings
 
 from django.conf import settings
@@ -107,11 +106,6 @@ class DatabaseOperations(BaseDatabaseOperations):
             value = bool(value)
         return value
 
-    def convert_uuidfield_value(self, value, expression, connection):
-        if value is not None:
-            value = uuid.UUID(value)
-        return value
-
     def date_extract_sql(self, lookup_type, field_name):
         if lookup_type == 'week_day':
             return "DATEPART(dw, %s)" % field_name
@@ -201,8 +195,6 @@ class DatabaseOperations(BaseDatabaseOperations):
         internal_type = expression.output_field.get_internal_type()
         if internal_type == 'DateTimeField':
             converters.append(self.convert_datetimefield_value)
-        elif internal_type == 'UUIDField':
-            converters.append(self.convert_uuidfield_value)
         elif internal_type in ('NullBooleanField', 'BooleanField'):
             converters.append(self.convert_booleanfield_value)
         return converters

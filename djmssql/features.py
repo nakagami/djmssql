@@ -28,7 +28,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_timezones = False
     supports_transactions = True
     uses_savepoints = True
-    has_native_uuid_field = False
+    has_native_uuid_field = True
     has_select_for_update = False
     supports_table_check_constraints = False
     supports_tablespaces = False

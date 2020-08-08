@@ -52,7 +52,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         'SmallIntegerField': 'smallint',
         'TextField':         'nvarchar(max)',
         'TimeField':         'time',
-        'UUIDField':         'char(32)',
+        'UUIDField':         'uniqueidentifier',
     }
     data_type_check_constraints = {
         'PositiveIntegerField': '[%(column)s] >= 0',
