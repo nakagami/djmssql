@@ -35,7 +35,7 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         Database.BIGVARCHRTYPE: 'TextField',
         Database.NTEXTTYPE: 'TextField',
         Database.IMAGETYPE: 'BinaryField',
-        Database.GUIDTYPE: 'UUIDField',
+#        Database.GUIDTYPE: 'UUIDField',
     }
 
     def get_field_type(self, data_type, description):

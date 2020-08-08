@@ -34,8 +34,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_tablespaces = False
     supports_index_on_text_field = True
     nulls_order_largest = False
-    order_by_nulls_first = True
-    supports_order_by_nulls_modifier = False
     supports_json_field = False
     has_bulk_insert = False
     can_create_inline_fk = False
