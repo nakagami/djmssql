@@ -116,45 +116,45 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
                 [],
             )
 
-#    def _alter_column_type_sql(self, model, old_field, new_field, new_type):
-#        new_type = self._set_field_new_type_null_status(old_field, new_type)
-#        return super()._alter_column_type_sql(model, old_field, new_field, new_type)
-#
-#    def _delete_unique_constraints(self, model, old_field, new_field, strict=False):
-#        unique_columns = []
-#        if old_field.unique and new_field.unique:
-#            unique_columns.append([old_field.column])
-#        else:
-#            for fields in model._meta.unique_together:
-#                columns = [model._meta.get_field(field).column for field in fields]
-#                if old_field.column in columns:
-#                    unique_columns.append(columns)
-#        if unique_columns:
-#            for columns in unique_columns:
-#                constraint_names = self._constraint_names(model, columns, unique=True)
-#                if strict and len(constraint_names) != 1:
-#                    raise ValueError("Found wrong number (%s) of unique constraints for %s.%s" % (
-#                        len(constraint_names),
-#                        model._meta.db_table,
-#                        old_field.column,
-#                    ))
-#                for constraint_name in constraint_names:
-#                    self.execute(self._delete_constraint_sql(self.sql_delete_unique, model, constraint_name))
-#
-#    def _rename_field_sql(self, table, old_field, new_field, new_type):
-#        new_type = self._set_field_new_type_null_status(old_field, new_type)
-#        return super()._rename_field_sql(table, old_field, new_field, new_type)
-#
-#    def _set_field_new_type_null_status(self, field, new_type):
-#        """
-#        Keep the null property of the old field. If it has changed, it will be
-#        handled separately.
-#        """
-#        if field.null:
-#            new_type += " NULL"
-#        else:
-#            new_type += " NOT NULL"
-#        return new_type
+    def _alter_column_type_sql(self, model, old_field, new_field, new_type):
+        new_type = self._set_field_new_type_null_status(old_field, new_type)
+        return super()._alter_column_type_sql(model, old_field, new_field, new_type)
+
+    def _delete_unique_constraints(self, model, old_field, new_field, strict=False):
+        unique_columns = []
+        if old_field.unique and new_field.unique:
+            unique_columns.append([old_field.column])
+        else:
+            for fields in model._meta.unique_together:
+                columns = [model._meta.get_field(field).column for field in fields]
+                if old_field.column in columns:
+                    unique_columns.append(columns)
+        if unique_columns:
+            for columns in unique_columns:
+                constraint_names = self._constraint_names(model, columns, unique=True)
+                if strict and len(constraint_names) != 1:
+                    raise ValueError("Found wrong number (%s) of unique constraints for %s.%s" % (
+                        len(constraint_names),
+                        model._meta.db_table,
+                        old_field.column,
+                    ))
+                for constraint_name in constraint_names:
+                    self.execute(self._delete_constraint_sql(self.sql_delete_unique, model, constraint_name))
+
+    def _rename_field_sql(self, table, old_field, new_field, new_type):
+        new_type = self._set_field_new_type_null_status(old_field, new_type)
+        return super()._rename_field_sql(table, old_field, new_field, new_type)
+
+    def _set_field_new_type_null_status(self, field, new_type):
+        """
+        Keep the null property of the old field. If it has changed, it will be
+        handled separately.
+        """
+        if field.null:
+            new_type += " NULL"
+        else:
+            new_type += " NOT NULL"
+        return new_type
 
     def add_field(self, model, field):
         """
