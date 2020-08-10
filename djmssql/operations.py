@@ -276,16 +276,7 @@ class DatabaseOperations(BaseDatabaseOperations):
         raise NotImplementedError('SQL Server has no built-in regular expression support.')
 
     def last_executed_query(self, cursor, sql, params):
-        """
-        Returns a string of the query last executed by the given cursor, with
-        placeholders replaced with actual values.
-
-        `sql` is the raw query containing placeholders, and `params` is the
-        sequence of parameters. These are used by default, but this method
-        exists for database backends to provide a better implementation
-        according to their own quoting schemes.
-        """
-        return super().last_executed_query(cursor, cursor.last_sql, cursor.last_params)
+        return cursor.query
 
     def savepoint_create_sql(self, sid):
         """

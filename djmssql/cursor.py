@@ -40,12 +40,15 @@ class CursorWrapper(Database.Cursor):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.closed = False
+        self.query = None
 
     def execute(self, query, params=None):
         if self.closed:
             raise InterfaceError('Cursor is closed')
         try:
-            super().execute(convert_sql(query, params))
+            q = convert_sql(query, params)
+            super().execute(q)
+            self.query = q
         except Database.OperationalError as e:
             if e.err_num != 15225:
                 raise e

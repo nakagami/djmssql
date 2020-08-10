@@ -18,6 +18,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     ignores_quoted_identifier_case = True
     requires_literal_defaults = True
     requires_sqlparse_for_splitting = False
+    supports_partially_nullable_unique_constraints = False
     supports_nullable_unique_constraints = False
     supports_paramstyle_pyformat = False
     supports_regex_backreferencing = False
@@ -40,6 +41,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_unspecified_pk = True
     supports_select_union = False
     closed_cursor_error_class = InterfaceError
+    supports_boolean_expr_in_select_clause = False
 
     @cached_property
     def introspected_field_types(self):
