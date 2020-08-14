@@ -15,7 +15,7 @@ classifiers = [
 ]
 
 setup(name='djmssql', 
-        version='0.1.0',
+        version='0.2.0',
         description='Django database backend for MS SQLServer',
         long_description=open('README.rst').read(),
         url='https://github.com/nakagami/djmssql/',

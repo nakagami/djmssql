@@ -8,7 +8,7 @@ I refer to djang-pyodbc-azure (https://github.com/michiya/django-pyodbc-azure).
 Requirements
 -------------
 
-* Django 2.1+
+* Django 3.1
 * minitds (https://github.com/nakagami/minitds) recently released.
 
 Installation
