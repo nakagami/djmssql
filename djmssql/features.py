@@ -5,7 +5,7 @@ from django.utils.functional import cached_property
 
 class DatabaseFeatures(BaseDatabaseFeatures):
     allow_sliced_subqueries_with_in = False
-    can_introspect_autofield = True
+    can_introspect_autofield = False
     can_introspect_small_integer_field = True
     can_return_id_from_insert = True
     for_update_after_from = True

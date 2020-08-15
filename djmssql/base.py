@@ -164,3 +164,15 @@ class DatabaseWrapper(BaseDatabaseWrapper):
     def close_if_unusable_or_obsolete(self):
         if self.errors_occurred:
             self.close()
+
+    def disable_constraint_checking(self):
+        with self.wrap_database_errors:
+            self.connection._execute(
+                'EXEC sp_msforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all"'
+            )
+
+    def enable_constraint_checking(self):
+        if not self.needs_rollback:
+            self.connection._execute(
+                'EXEC sp_msforeachtable "ALTER TABLE ? WITH CHECK CONSTRAINT all"'
+            )
