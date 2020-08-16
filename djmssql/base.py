@@ -174,5 +174,5 @@ class DatabaseWrapper(BaseDatabaseWrapper):
     def enable_constraint_checking(self):
         if not self.needs_rollback:
             self.connection._execute(
-                'EXEC sp_msforeachtable "ALTER TABLE ? WITH CHECK CONSTRAINT all"'
+                'EXEC sp_msforeachtable "ALTER TABLE ? WITH CHECK  CHECK CONSTRAINT all"'
             )

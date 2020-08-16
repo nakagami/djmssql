@@ -5,9 +5,6 @@ from django.utils.functional import cached_property
 
 class DatabaseFeatures(BaseDatabaseFeatures):
     allow_sliced_subqueries_with_in = False
-    can_introspect_autofield = False
-    can_introspect_small_integer_field = True
-    can_return_id_from_insert = True
     for_update_after_from = True
     has_real_datatype = True
     has_zoneinfo_database = False
@@ -47,8 +44,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     def introspected_field_types(self):
         return {
             **super().introspected_field_types,
-            'BinaryField': 'TextField',
-            'BooleanField': 'IntegerField',
             'DurationField': 'BigIntegerField',
             'GenericIPAddressField': 'CharField',
             'PositiveBigIntegerField': 'BigIntegerField',

@@ -7,6 +7,7 @@ from django.db.backends.base.introspection import (
 )
 from django.db.models.indexes import Index
 
+SQL_SMALLAUTOFIELD = -777666
 SQL_AUTOFIELD = -777555
 SQL_BIGAUTOFIELD = -777444
 
@@ -14,6 +15,7 @@ SQL_BIGAUTOFIELD = -777444
 class DatabaseIntrospection(BaseDatabaseIntrospection):
     # Map type codes to Django Field types.
     data_types_reverse = {
+        SQL_SMALLAUTOFIELD: 'SmallAutoField',
         SQL_AUTOFIELD: 'AutoField',
         SQL_BIGAUTOFIELD: 'BigAutoField',
         Database.INTNTYPE: 'BigIntegerField',
@@ -61,7 +63,15 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         r = [TableInfo(row[0], types.get(row[1])) for row in cursor.fetchall()]
         return r
 
-    def get_table_description(self, cursor, table_name, identity_check=True):
+    def _is_auto_field(self, cursor, table_name, column_name):
+        """
+        Checks whether column is Identity
+        """
+        cursor.execute("SELECT COLUMNPROPERTY(OBJECT_ID(%s), %s, 'IsIdentity')",
+                         (self.connection.ops.quote_name(table_name), column_name))
+        return cursor.fetchall()[0][0]
+
+    def get_table_description(self, cursor, table_name):
         cursor.execute('EXEC sp_columns %s', (table_name, ))
         items = []
 
@@ -69,6 +79,12 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
             type_name = c[5].split()[0]
             cursor.execute('SELECT TYPE_ID(%s)', (type_name, ))
             type_id = cursor.fetchone()[0]
+            if type_id == Database.INT2TYPE and self._is_auto_field(cursor, table_name, c[3]):
+                type_id = SQL_SMALLAUTOFIELD
+            elif type_id in (Database.INTNTYPE, Database.INT4TYPE) and self._is_auto_field(cursor, table_name, c[3]):
+                type_id = SQL_AUTOFIELD
+            elif type_id == Database.INT8TYPE and self._is_auto_field(cursor, table_name, c[3]):
+                type_id = SQL_BIGAUTOFIELD
             ln = c[7]
             if ln and ln == c[15]:  # string
                 ln //=2
