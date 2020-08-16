@@ -38,6 +38,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_select_union = False
     closed_cursor_error_class = InterfaceError
     supports_boolean_expr_in_select_clause = False
+    supports_order_by_nulls_modifier = False
 
     @cached_property
     def introspected_field_types(self):
