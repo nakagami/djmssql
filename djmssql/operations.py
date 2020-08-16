@@ -357,10 +357,10 @@ class DatabaseOperations(BaseDatabaseOperations):
         rhs_sql, rhs_params = rhs
         if internal_type == 'DateField':
             sql = "CAST(DATEDIFF(day, %(rhs)s, %(lhs)s) AS bigint) * 86400 * 1000000"
-            params = rhs_params + lhs_params
+            params = list(rhs_params) + list(lhs_params)
         else:
             sql = "CAST(DATEDIFF(second, %(rhs)s, %(lhs)s) AS bigint) * 1000000 + DATEPART(microsecond, %(lhs)s) - DATEPART(microsecond, %(rhs)s)"
-            params = rhs_params + lhs_params * 2 + rhs_params
+            params = list(rhs_params) + list(lhs_params) * 2 + list(rhs_params)
         return  sql % {'lhs':lhs_sql, 'rhs':rhs_sql}, params
 
     def prep_for_like_query(self, x):
