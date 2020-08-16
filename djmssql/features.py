@@ -34,7 +34,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_json_field = False
     has_bulk_insert = False
     can_create_inline_fk = False
-    allows_auto_pk_0 = False
     supports_unspecified_pk = True
     supports_select_union = False
     closed_cursor_error_class = InterfaceError
