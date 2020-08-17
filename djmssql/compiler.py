@@ -1,7 +1,7 @@
 import types
 
 from django.db.models.aggregates import Avg, Count, StdDev, Variance
-from django.db.models.expressions import Value
+from django.db.models.expressions import OrderBy, Value
 from django.db.models.functions import (
     Chr, ConcatPair, Greatest, Least, Length, LPad, Repeat, RPad, StrIndex, Substr, Trim
 )
@@ -55,6 +55,14 @@ def _as_sql_lpad(self, compiler, connection):
     template = ('LEFT(REPLICATE(%(fill_text)s, %(length)s), CASE WHEN %(length)s > LEN(%(expression)s) '
                 'THEN %(length)s - LEN(%(expression)s) ELSE 0 END) + %(expression)s')
     return template % {'expression':expression, 'length':length, 'fill_text':fill_text }, params
+
+def _as_sql_order_by(self, compiler, connection):
+    template = None
+    if self.nulls_last:
+        template = 'CASE WHEN %(expression)s IS NULL THEN 1 ELSE 0 END, %(expression)s %(ordering)s'
+    if self.nulls_first:
+        template = 'CASE WHEN %(expression)s IS NULL THEN 0 ELSE 1 END, %(expression)s %(ordering)s'
+    return self.as_sql(compiler, connection, template=template)
 
 def _as_sql_repeat(self, compiler, connection):
     return self.as_sql(compiler, connection, function='REPLICATE')
@@ -320,6 +328,8 @@ class SQLCompiler(compiler.SQLCompiler):
             as_microsoft = _as_sql_rpad
         elif isinstance(node, LPad):
             as_microsoft = _as_sql_lpad
+        elif isinstance(node, OrderBy):
+            as_microsoft = _as_sql_order_by
         elif isinstance(node, Repeat):
             as_microsoft = _as_sql_repeat
         elif isinstance(node, StdDev):
