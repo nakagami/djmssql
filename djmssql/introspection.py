@@ -89,8 +89,9 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
             if ln and ln == c[15]:  # string
                 ln //=2
 
+            # TODO: set collation
             items.append(
-                FieldInfo(c[3], type_id, ln, ln, c[6], c[8], bool(c[10]), c[12])
+                FieldInfo(c[3], type_id, ln, ln, c[6], c[8], bool(c[10]), c[12], None)
             )
         return items
 
