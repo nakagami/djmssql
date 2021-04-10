@@ -124,7 +124,7 @@ class DatabaseOperations(BaseDatabaseOperations):
             sql = 'DATEADD(microsecond, %d%%s, CAST(%s AS datetime2))' % (timedelta.microseconds, sql)
         return sql
 
-    def date_trunc_sql(self, lookup_type, field_name):
+    def date_trunc_sql(self, lookup_type, field_name, timezone=None):
         if lookup_type == 'year':
             return "CONVERT(datetime2, CONVERT(varchar, DATEPART(year, %s)) + '/01/01')" % field_name
         if lookup_type == 'quarter':
