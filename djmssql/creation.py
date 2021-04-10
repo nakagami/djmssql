@@ -26,32 +26,4 @@ class DatabaseCreation(BaseDatabaseCreation):
         return conn_params
 
     def _create_test_db(self, verbosity, autoclobber, keepdb=False):
-        """"
-        Internal implementation - creates the test db tables.
-        """
-        test_database_name = self._get_test_db_name()
-        connection = Database.connect(**self._get_connection_params(database='tempdb'))
-        if not keepdb:
-            try:
-                connection._execute('DROP DATABASE %s' % (
-                    self.connection.ops.quote_name(test_database_name),
-                ))
-            except:
-                pass
-        connection._execute('CREATE DATABASE %s' % (
-                self.connection.ops.quote_name(test_database_name),
-        ))
-        connection.close()
-        return test_database_name
-
-    def _destroy_test_db(self, test_database_name, verbosity):
-        """
-        Internal implementation - remove the test db tables.
-        """
-        connection = Database.connect(**self._get_connection_params(database='tempdb'))
-        try:
-            connection._execute('DROP DATABASE %s' % (
-                self.connection.ops.quote_name(test_database_name),
-            ))
-        except:
-            pass
+        return self._get_test_db_name()
